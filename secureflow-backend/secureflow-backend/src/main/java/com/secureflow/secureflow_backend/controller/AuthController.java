@@ -1,5 +1,7 @@
 package com.secureflow.secureflow_backend.controller;
 
+import com.secureflow.secureflow_backend.dto.AuthResponse;
+import com.secureflow.secureflow_backend.dto.LoginRequest;
 import com.secureflow.secureflow_backend.dto.RegisterRequest;
 import com.secureflow.secureflow_backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,14 @@ public class AuthController {
             @RequestBody RegisterRequest request
     ){
         return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(
+            @RequestBody LoginRequest request
+    ){
+        return ResponseEntity.ok(authService.login(request));
+
     }
 }
 
