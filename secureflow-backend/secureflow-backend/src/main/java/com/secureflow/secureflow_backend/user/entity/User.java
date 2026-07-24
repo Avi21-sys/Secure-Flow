@@ -1,4 +1,4 @@
-package com.secureflow.secureflow_backend.entity;
+package com.secureflow.secureflow_backend.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

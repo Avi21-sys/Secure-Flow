@@ -1,13 +1,13 @@
-package com.secureflow.secureflow_backend.service;
+package com.secureflow.secureflow_backend.auth.service;
 
-import com.secureflow.secureflow_backend.dto.AuthResponse;
-import com.secureflow.secureflow_backend.dto.LoginRequest;
-import com.secureflow.secureflow_backend.dto.RegisterRequest;
-import com.secureflow.secureflow_backend.entity.Role;
-import com.secureflow.secureflow_backend.entity.User;
-import com.secureflow.secureflow_backend.repository.UserRepository;
-import com.secureflow.secureflow_backend.security.CustomUserDetailsService;
-import com.secureflow.secureflow_backend.security.JwtService;
+import com.secureflow.secureflow_backend.auth.dto.AuthResponse;
+import com.secureflow.secureflow_backend.auth.dto.LoginRequest;
+import com.secureflow.secureflow_backend.auth.dto.RegisterRequest;
+import com.secureflow.secureflow_backend.user.entity.Role;
+import com.secureflow.secureflow_backend.user.entity.User;
+import com.secureflow.secureflow_backend.user.repository.UserRepository;
+import com.secureflow.secureflow_backend.auth.security.CustomUserDetailsService;
+import com.secureflow.secureflow_backend.auth.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

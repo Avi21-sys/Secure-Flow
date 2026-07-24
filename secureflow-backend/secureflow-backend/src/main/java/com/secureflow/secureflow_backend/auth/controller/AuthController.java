@@ -1,9 +1,9 @@
-package com.secureflow.secureflow_backend.controller;
+package com.secureflow.secureflow_backend.auth.controller;
 
-import com.secureflow.secureflow_backend.dto.AuthResponse;
-import com.secureflow.secureflow_backend.dto.LoginRequest;
-import com.secureflow.secureflow_backend.dto.RegisterRequest;
-import com.secureflow.secureflow_backend.service.AuthService;
+import com.secureflow.secureflow_backend.auth.dto.AuthResponse;
+import com.secureflow.secureflow_backend.auth.dto.LoginRequest;
+import com.secureflow.secureflow_backend.auth.dto.RegisterRequest;
+import com.secureflow.secureflow_backend.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

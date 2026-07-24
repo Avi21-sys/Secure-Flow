@@ -1,4 +1,4 @@
-package com.secureflow.secureflow_backend.security;
+package com.secureflow.secureflow_backend.auth.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

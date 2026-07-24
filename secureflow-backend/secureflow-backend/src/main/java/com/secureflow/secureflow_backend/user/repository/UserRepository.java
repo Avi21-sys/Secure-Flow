@@ -1,6 +1,6 @@
-package com.secureflow.secureflow_backend.repository;
+package com.secureflow.secureflow_backend.user.repository;
 
-import com.secureflow.secureflow_backend.entity.User;
+import com.secureflow.secureflow_backend.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

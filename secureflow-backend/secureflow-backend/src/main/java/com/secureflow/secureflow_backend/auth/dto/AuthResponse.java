@@ -1,4 +1,4 @@
-package com.secureflow.secureflow_backend.dto;
+package com.secureflow.secureflow_backend.auth.dto;
 
 import lombok.*;
 

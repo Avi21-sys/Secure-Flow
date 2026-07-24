@@ -1,6 +1,6 @@
-package com.secureflow.secureflow_backend.security;
+package com.secureflow.secureflow_backend.auth.security;
 
-import com.secureflow.secureflow_backend.entity.User;
+import com.secureflow.secureflow_backend.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

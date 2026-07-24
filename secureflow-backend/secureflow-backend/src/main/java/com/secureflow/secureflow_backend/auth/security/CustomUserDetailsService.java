@@ -1,7 +1,7 @@
-package com.secureflow.secureflow_backend.security;
+package com.secureflow.secureflow_backend.auth.security;
 
-import com.secureflow.secureflow_backend.entity.User;
-import com.secureflow.secureflow_backend.repository.UserRepository;
+import com.secureflow.secureflow_backend.user.entity.User;
+import com.secureflow.secureflow_backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
