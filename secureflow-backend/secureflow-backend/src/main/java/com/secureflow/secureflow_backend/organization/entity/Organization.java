@@ -1,9 +1,12 @@
 package com.secureflow.secureflow_backend.organization.entity;
 
+import com.secureflow.secureflow_backend.project.entity.Project;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "organizations")
@@ -31,6 +34,13 @@ public class Organization {
     private String website;
 
     private String address;
+
+    @OneToMany(
+            mappedBy = "organization",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Project> projects = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
