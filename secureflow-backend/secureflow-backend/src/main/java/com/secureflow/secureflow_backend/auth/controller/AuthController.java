@@ -4,6 +4,7 @@ import com.secureflow.secureflow_backend.auth.dto.AuthResponse;
 import com.secureflow.secureflow_backend.auth.dto.LoginRequest;
 import com.secureflow.secureflow_backend.auth.dto.RegisterRequest;
 import com.secureflow.secureflow_backend.auth.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(
-            @RequestBody RegisterRequest request
+            @Valid @RequestBody RegisterRequest request
     ){
         return ResponseEntity.ok(authService.register(request));
     }

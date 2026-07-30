@@ -3,6 +3,7 @@ package com.secureflow.secureflow_backend.organization.controller;
 import com.secureflow.secureflow_backend.organization.dto.CreateOrganizationRequest;
 import com.secureflow.secureflow_backend.organization.dto.OrganizationResponse;
 import com.secureflow.secureflow_backend.organization.service.OrganizationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class OrganizationController {
 
     @PostMapping
     public ResponseEntity<OrganizationResponse> createOrganization(
-            @RequestBody CreateOrganizationRequest request
+            @Valid @RequestBody CreateOrganizationRequest request
             ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(organizationService.createOrganization(request));

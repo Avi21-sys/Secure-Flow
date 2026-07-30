@@ -3,6 +3,7 @@ package com.secureflow.secureflow_backend.project.controller;
 import com.secureflow.secureflow_backend.project.dto.CreateProjectRequest;
 import com.secureflow.secureflow_backend.project.dto.ProjectResponse;
 import com.secureflow.secureflow_backend.project.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(
-            @RequestBody CreateProjectRequest request
+            @Valid @RequestBody CreateProjectRequest request
     ) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
