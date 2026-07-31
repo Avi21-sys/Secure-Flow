@@ -1,5 +1,6 @@
 package com.secureflow.secureflow_backend.project.service;
 
+import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.organization.entity.Organization;
 import com.secureflow.secureflow_backend.organization.repository.OrganizationRepository;
 import com.secureflow.secureflow_backend.project.dto.CreateProjectRequest;
@@ -23,7 +24,7 @@ public class ProjectServiceImpl implements ProjectService{
 
         Organization organization = organizationRepository.findById(request.getOrganizationId())
                 .orElseThrow(() ->
-                        new RuntimeException("Organization not found")
+                        new ResourceNotFoundException("Organization not found")
                 );
 
         Project project = Project.builder()
@@ -52,7 +53,7 @@ public class ProjectServiceImpl implements ProjectService{
 
         Project project = projectRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Project not found")
+                        new ResourceNotFoundException("Project not found")
                 );
 
         return mapToResponse(project);

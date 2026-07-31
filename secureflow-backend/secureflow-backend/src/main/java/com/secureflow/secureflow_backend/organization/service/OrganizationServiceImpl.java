@@ -1,5 +1,6 @@
 package com.secureflow.secureflow_backend.organization.service;
 
+import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.organization.dto.CreateOrganizationRequest;
 import com.secureflow.secureflow_backend.organization.dto.OrganizationResponse;
 import com.secureflow.secureflow_backend.organization.entity.Organization;
@@ -42,7 +43,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public OrganizationResponse getOrganizationById(Long id){
         Organization organization = organizationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Organization not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id: " + id));
         return mapToResponse(organization);
     }
 
