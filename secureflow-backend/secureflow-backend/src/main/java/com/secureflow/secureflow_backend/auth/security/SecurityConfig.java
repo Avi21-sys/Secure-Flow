@@ -55,7 +55,10 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",
                                 "/api/v1/organization/**",
                                 "/api/v1/project/**",
-                                "/api/v1/vulnerability/**"
+                                "/api/v1/vulnerability/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
                         )
                         .permitAll()
 
