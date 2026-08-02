@@ -4,6 +4,7 @@ import com.secureflow.secureflow_backend.auth.dto.AuthResponse;
 import com.secureflow.secureflow_backend.auth.dto.LoginRequest;
 import com.secureflow.secureflow_backend.auth.dto.RegisterRequest;
 import com.secureflow.secureflow_backend.auth.service.AuthService;
+import com.secureflow.secureflow_backend.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +21,29 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(
+    public ResponseEntity<ApiResponse<String>> register(
             @Valid @RequestBody RegisterRequest request
     ){
-        return ResponseEntity.ok(authService.register(request));
+        String message = authService.register(request);
+        ApiResponse<String> response = ApiResponse.<String>builder()
+                .success(true)
+                .message(message)
+                .data(null)
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(
+    public ResponseEntity<ApiResponse<AuthResponse>> login(
             @RequestBody LoginRequest request
     ){
-        return ResponseEntity.ok(authService.login(request));
+        AuthResponse authResponse = authService.login(request);
+        ApiResponse<AuthResponse> response = ApiResponse.<AuthResponse>builder()
+                .success(true)
+                .message("Login successful")
+                .data(authResponse)
+                .build();
+        return ResponseEntity.ok(response);
 
     }
 }
