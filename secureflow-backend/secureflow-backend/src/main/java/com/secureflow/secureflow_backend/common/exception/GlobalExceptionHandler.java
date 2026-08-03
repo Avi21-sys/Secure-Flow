@@ -2,6 +2,7 @@ package com.secureflow.secureflow_backend.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -42,6 +43,19 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDenied(AccessDeniedException ex) {
+
+        ApiError error = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.FORBIDDEN.value())
+                .error("Forbidden")
+                .message("Access denied")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
     @ExceptionHandler(Exception.class)
