@@ -1,23 +1,20 @@
-package com.secureflow.secureflow_backend.vulnerability.entity;
+package com.secureflow.secureflow_backend.incident.entity;
 
-import com.secureflow.secureflow_backend.incident.entity.Incident;
-import com.secureflow.secureflow_backend.project.entity.Project;
 import com.secureflow.secureflow_backend.user.entity.User;
+import com.secureflow.secureflow_backend.vulnerability.entity.Vulnerability;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "vulnerabilities")
+@Table(name = "incidents")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class Vulnerability {
+public class Incident {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,40 +30,27 @@ public class Vulnerability {
 
 
     @Enumerated(EnumType.STRING)
-    private Severity severity;
+    private IncidentSeverity severity;
 
 
     @Enumerated(EnumType.STRING)
-    private VulnerabilityStatus status;
-
-
-    private Double cvssScore;
-
-
-    private String cwe;
-
-
-    private String owaspCategory;
+    private IncidentStatus status;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
-    private Project project;
+    @JoinColumn(name = "vulnerability_id")
+    private Vulnerability vulnerability;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @OneToMany(
-            mappedBy = "vulnerability",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<Incident> incidents = new ArrayList<>();
-
 
     private LocalDateTime createdAt;
+
+
+    private LocalDateTime resolvedAt;
 
 
     @PrePersist
@@ -75,7 +59,7 @@ public class Vulnerability {
         createdAt = LocalDateTime.now();
 
         if(status == null){
-            status = VulnerabilityStatus.OPEN;
+            status = IncidentStatus.OPEN;
         }
 
     }
