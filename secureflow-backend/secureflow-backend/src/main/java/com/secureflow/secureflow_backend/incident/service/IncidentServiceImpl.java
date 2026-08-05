@@ -1,5 +1,6 @@
 package com.secureflow.secureflow_backend.incident.service;
 
+import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
 import com.secureflow.secureflow_backend.incident.entity.Incident;
@@ -36,9 +37,7 @@ public class IncidentServiceImpl implements IncidentService {
                                 request.getVulnerabilityId()
                         )
                         .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Vulnerability not found"
-                                )
+                                new ResourceNotFoundException("Vulnerability not found")
                         );
 
 
@@ -52,7 +51,7 @@ public class IncidentServiceImpl implements IncidentService {
                                     request.getAssignedToId()
                             )
                             .orElseThrow(() ->
-                                    new RuntimeException(
+                                    new ResourceNotFoundException(
                                             "User not found"
                                     )
                             );
@@ -116,7 +115,7 @@ public class IncidentServiceImpl implements IncidentService {
                 incidentRepository.findById(id)
 
                         .orElseThrow(() ->
-                                new RuntimeException(
+                                new ResourceNotFoundException(
                                         "Incident not found"
                                 )
                         );

@@ -90,6 +90,28 @@ public class SecurityConfig {
                                 "MANAGER"
                         )
 
+                        //Incident APIs
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/incident/**")
+                        .hasAnyRole("ADMIN", "ANALYST")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/v1/incident/**")
+                        .hasAnyRole("ADMIN", "ANALYST")
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/api/v1/incident/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/incident/**")
+                        .hasAnyRole(
+                                "ADMIN",
+                                "ANALYST",
+                                "DEVELOPER",
+                                "MANAGER"
+                        )
+
                         // Everything else requires JWT
                         .anyRequest()
                         .authenticated()
