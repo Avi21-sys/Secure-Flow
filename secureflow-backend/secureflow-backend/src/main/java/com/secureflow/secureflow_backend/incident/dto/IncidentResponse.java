@@ -45,4 +45,6 @@ public class IncidentResponse {
 
     private LocalDateTime resolvedAt;
 
+    private String resolutionNotes;
+
 }

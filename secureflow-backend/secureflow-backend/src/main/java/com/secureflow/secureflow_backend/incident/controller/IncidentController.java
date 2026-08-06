@@ -3,6 +3,7 @@ package com.secureflow.secureflow_backend.incident.controller;
 import com.secureflow.secureflow_backend.common.response.ApiResponse;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
+import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.service.IncidentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class IncidentController {
                                 .build()
                 );
     }
-    
+
 
     // Get All Incidents
     @GetMapping
@@ -81,9 +82,6 @@ public class IncidentController {
     }
 
 
-
-
-
     // Get Incidents By Vulnerability
     @GetMapping("/vulnerability/{vulnerabilityId}")
     @PreAuthorize(
@@ -104,9 +102,25 @@ public class IncidentController {
 
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
+    public ResponseEntity<ApiResponse<IncidentResponse>> updateIncident(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateIncidentRequest request
+    ){
+
+        IncidentResponse response =
+                incidentService.updateIncident(id, request);
 
 
-
+        return ResponseEntity.ok(
+                ApiResponse.<IncidentResponse>builder()
+                        .success(true)
+                        .message("Incident updated successfully")
+                        .data(response)
+                        .build()
+        );
+    }
 
     // Delete Incident
     @DeleteMapping("/{id}")

@@ -2,6 +2,7 @@ package com.secureflow.secureflow_backend.incident.service;
 
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
+import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
 
 import java.util.List;
 
@@ -16,4 +17,9 @@ public interface IncidentService {
     List<IncidentResponse> getByVulnerability(Long vulnerabilityId);
 
     void deleteIncident(Long id);
+
+    IncidentResponse updateIncident(
+            Long id,
+            UpdateIncidentRequest request
+    );
 }

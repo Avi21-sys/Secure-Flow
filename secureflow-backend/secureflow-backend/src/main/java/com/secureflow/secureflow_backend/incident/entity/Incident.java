@@ -46,6 +46,9 @@ public class Incident {
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
+    @Column(length = 2000)
+    private String resolutionNotes;
+
 
     private LocalDateTime createdAt;
 

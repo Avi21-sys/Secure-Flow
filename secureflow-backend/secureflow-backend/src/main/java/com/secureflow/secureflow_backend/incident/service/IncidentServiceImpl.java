@@ -3,7 +3,9 @@ package com.secureflow.secureflow_backend.incident.service;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
+import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.entity.Incident;
+import com.secureflow.secureflow_backend.incident.entity.IncidentStatus;
 import com.secureflow.secureflow_backend.incident.repository.IncidentRepository;
 import com.secureflow.secureflow_backend.user.entity.User;
 import com.secureflow.secureflow_backend.user.repository.UserRepository;
@@ -12,6 +14,7 @@ import com.secureflow.secureflow_backend.vulnerability.repository.VulnerabilityR
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -157,9 +160,66 @@ public class IncidentServiceImpl implements IncidentService {
 
     }
 
+    @Override
+    public IncidentResponse updateIncident(
+            Long id,
+            UpdateIncidentRequest request
+    ) {
 
 
+        Incident incident =
+                incidentRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Incident not found with id: " + id
+                                )
+                        );
 
+
+        incident.setStatus(request.getStatus());
+
+
+        if(request.getAssignedToId() != null){
+
+            User user =
+                    userRepository.findById(
+                                    request.getAssignedToId()
+                            )
+                            .orElseThrow(() ->
+                                    new ResourceNotFoundException(
+                                            "User not found"
+                                    )
+                            );
+
+            incident.setAssignedTo(user);
+        }
+
+
+        if(request.getResolutionNotes() != null){
+
+            incident.setResolutionNotes(
+                    request.getResolutionNotes()
+            );
+        }
+
+
+        if(request.getStatus()
+                == IncidentStatus.RESOLVED
+        ){
+
+            incident.setResolvedAt(
+                    LocalDateTime.now()
+            );
+
+        }
+
+
+        Incident updated =
+                incidentRepository.save(incident);
+
+
+        return mapToResponse(updated);
+    }
 
     private IncidentResponse mapToResponse(
             Incident incident
@@ -207,6 +267,8 @@ public class IncidentServiceImpl implements IncidentService {
                 .resolvedAt(
                         incident.getResolvedAt()
                 )
+
+                .resolutionNotes(incident.getResolutionNotes())
 
                 .build();
 
