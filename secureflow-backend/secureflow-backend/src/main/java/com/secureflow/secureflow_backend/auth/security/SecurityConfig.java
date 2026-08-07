@@ -112,6 +112,9 @@ public class SecurityConfig {
                                 "MANAGER"
                         )
 
+                        .requestMatchers("/api/v1/dashboard/**")
+                        .hasAnyRole("ADMIN","ANALYST","MANAGER")
+
                         // Everything else requires JWT
                         .anyRequest()
                         .authenticated()

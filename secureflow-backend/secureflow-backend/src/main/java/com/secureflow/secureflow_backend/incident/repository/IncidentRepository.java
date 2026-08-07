@@ -11,4 +11,6 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
     List<Incident> findByVulnerabilityId(Long vulnerabilityId);
 
     List<Incident> findByStatus(IncidentStatus status);
+
+    long countByStatus(IncidentStatus status);
 }
