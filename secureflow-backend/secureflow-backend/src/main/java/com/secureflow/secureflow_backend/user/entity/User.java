@@ -1,9 +1,12 @@
 package com.secureflow.secureflow_backend.user.entity;
 
+import com.secureflow.secureflow_backend.audit.entity.AuditLog;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -28,6 +31,12 @@ public class User {
     private String password;
 
     private LocalDateTime createdAt;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+    )
+    private List<AuditLog> auditLogs = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
