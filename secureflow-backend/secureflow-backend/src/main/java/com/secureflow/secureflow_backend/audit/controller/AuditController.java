@@ -100,8 +100,6 @@ public class AuditController {
 
 
 
-
-
     @GetMapping("/entity/{entityName}")
     @PreAuthorize(
             "hasAnyRole('ADMIN','ANALYST','MANAGER')"

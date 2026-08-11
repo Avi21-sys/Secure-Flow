@@ -2,6 +2,7 @@ package com.secureflow.secureflow_backend.audit.service;
 
 import com.secureflow.secureflow_backend.audit.dto.AuditResponse;
 import com.secureflow.secureflow_backend.audit.dto.CreateAuditRequest;
+import com.secureflow.secureflow_backend.audit.entity.AuditAction;
 import com.secureflow.secureflow_backend.audit.entity.AuditLog;
 import com.secureflow.secureflow_backend.audit.repository.AuditRepository;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
@@ -66,6 +67,35 @@ public class AuditServiceImpl implements AuditService{
         return auditRepository.findByEntityName(entityName).stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    public void logActivity(
+            Long userId,
+            AuditAction action,
+            String entityName,
+            Long entityId,
+            String description
+    ){
+
+        CreateAuditRequest request =
+                CreateAuditRequest.builder()
+
+                        .userId(userId)
+
+                        .action(action)
+
+                        .entityName(entityName)
+
+                        .entityId(entityId)
+
+                        .description(description)
+
+                        .build();
+
+
+        createAudit(request);
+
     }
 
     private AuditResponse mapToResponse(AuditLog audit){

@@ -1,5 +1,7 @@
 package com.secureflow.secureflow_backend.incident.service;
 
+import com.secureflow.secureflow_backend.audit.entity.AuditAction;
+import com.secureflow.secureflow_backend.audit.service.AuditService;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
@@ -26,6 +28,8 @@ public class IncidentServiceImpl implements IncidentService {
     private final VulnerabilityRespository vulnerabilityRepository;
 
     private final UserRepository userRepository;
+
+    private final AuditService auditService;
 
 
 
@@ -82,14 +86,25 @@ public class IncidentServiceImpl implements IncidentService {
         Incident savedIncident =
                 incidentRepository.save(incident);
 
+        auditService.logActivity(
+
+                1L,
+
+                AuditAction.CREATE,
+
+                "INCIDENT",
+
+                savedIncident.getId(),
+
+                "Created incident: "
+                        + savedIncident.getTitle()
+
+        );
 
 
         return mapToResponse(savedIncident);
 
     }
-
-
-
 
 
     @Override
@@ -105,9 +120,6 @@ public class IncidentServiceImpl implements IncidentService {
                 .toList();
 
     }
-
-
-
 
 
     @Override
@@ -129,9 +141,6 @@ public class IncidentServiceImpl implements IncidentService {
     }
 
 
-
-
-
     @Override
     public List<IncidentResponse> getByVulnerability(
             Long vulnerabilityId
@@ -151,12 +160,35 @@ public class IncidentServiceImpl implements IncidentService {
 
 
 
-
-
     @Override
     public void deleteIncident(Long id){
 
-        incidentRepository.deleteById(id);
+        Incident incident =
+                incidentRepository.findById(id)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException(
+                                        "Incident not found"
+                                )
+                        );
+
+
+        incidentRepository.delete(incident);
+
+        auditService.logActivity(
+
+                1L,
+
+                AuditAction.DELETE,
+
+                "INCIDENT",
+
+                id,
+
+                "Deleted incident: "
+                        + incident.getTitle()
+
+        );
+
 
     }
 
@@ -217,6 +249,20 @@ public class IncidentServiceImpl implements IncidentService {
         Incident updated =
                 incidentRepository.save(incident);
 
+        auditService.logActivity(
+
+                1L,
+
+                AuditAction.UPDATE,
+
+                "INCIDENT",
+
+                updated.getId(),
+
+                "Updated incident status to "
+                        + updated.getStatus()
+
+        );
 
         return mapToResponse(updated);
     }

@@ -1,5 +1,8 @@
 package com.secureflow.secureflow_backend.project.service;
 
+import com.secureflow.secureflow_backend.audit.entity.AuditAction;
+import com.secureflow.secureflow_backend.audit.service.AuditService;
+import com.secureflow.secureflow_backend.auth.service.AuthService;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.organization.entity.Organization;
 import com.secureflow.secureflow_backend.organization.repository.OrganizationRepository;
@@ -18,6 +21,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     private final ProjectRepository projectRepository;
     private final OrganizationRepository organizationRepository;
+    private final AuditService auditService;
 
     @Override
     public ProjectResponse createProject(CreateProjectRequest request) {
@@ -35,6 +39,14 @@ public class ProjectServiceImpl implements ProjectService{
                 .build();
 
         Project savedProject = projectRepository.save(project);
+        auditService.logActivity(
+                1L,
+                AuditAction.CREATE,
+                "PROJECT",
+                savedProject.getId(),
+                "Created project: "
+                        + savedProject.getName()
+        );
 
         return mapToResponse(savedProject);
     }
