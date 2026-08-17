@@ -118,6 +118,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/audits/**")
                         .hasAnyRole("ADMIN","ANALYST","MANAGER")
 
+                        .requestMatchers("/api/v1/reports/**")
+                        .hasAnyRole("ADMIN","ANALYST","MANAGER")
+
                         // Everything else requires JWT
                         .anyRequest()
                         .authenticated()
