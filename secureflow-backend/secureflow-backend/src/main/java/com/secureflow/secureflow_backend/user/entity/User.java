@@ -1,6 +1,7 @@
 package com.secureflow.secureflow_backend.user.entity;
 
 import com.secureflow.secureflow_backend.audit.entity.AuditLog;
+import com.secureflow.secureflow_backend.notification.entity.Notification;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,6 +38,12 @@ public class User {
             cascade = CascadeType.ALL
     )
     private List<AuditLog> auditLogs = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL
+    )
+    private List<Notification> notifications = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
