@@ -121,6 +121,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/reports/**")
                         .hasAnyRole("ADMIN","ANALYST","MANAGER")
 
+                        .requestMatchers("/api/v1/notifications/**")
+                        .hasAnyRole(
+                                "ADMIN",
+                                "ANALYST",
+                                "MANAGER",
+                                "DEVELOPER"
+                        )
+
                         // Everything else requires JWT
                         .anyRequest()
                         .authenticated()
