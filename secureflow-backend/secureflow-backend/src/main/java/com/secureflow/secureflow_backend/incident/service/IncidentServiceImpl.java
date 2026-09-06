@@ -3,6 +3,7 @@ package com.secureflow.secureflow_backend.incident.service;
 import com.secureflow.secureflow_backend.audit.entity.AuditAction;
 import com.secureflow.secureflow_backend.audit.service.AuditService;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
+import com.secureflow.secureflow_backend.common.security.SecurityUtils;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
 import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
@@ -88,7 +89,7 @@ public class IncidentServiceImpl implements IncidentService {
 
         auditService.logActivity(
 
-                1L,
+                SecurityUtils.getCurrentUserId(),
 
                 AuditAction.CREATE,
 
@@ -176,7 +177,7 @@ public class IncidentServiceImpl implements IncidentService {
 
         auditService.logActivity(
 
-                1L,
+                SecurityUtils.getCurrentUserId(),
 
                 AuditAction.DELETE,
 
@@ -251,7 +252,7 @@ public class IncidentServiceImpl implements IncidentService {
 
         auditService.logActivity(
 
-                1L,
+                SecurityUtils.getCurrentUserId(),
 
                 AuditAction.UPDATE,
 
