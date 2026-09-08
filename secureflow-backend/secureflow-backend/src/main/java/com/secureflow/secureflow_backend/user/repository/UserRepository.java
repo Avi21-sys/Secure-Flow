@@ -1,9 +1,11 @@
 package com.secureflow.secureflow_backend.user.repository;
 
+import com.secureflow.secureflow_backend.user.entity.Role;
 import com.secureflow.secureflow_backend.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,4 +14,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);
+
+    List<User> findByRole(Role role);
+
+    List<User> findAllByOrderByCreatedAtDesc();
+
+    long countByEnabled(boolean enabled);
 }

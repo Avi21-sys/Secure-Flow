@@ -45,6 +45,10 @@ public class User {
     )
     private List<Notification> notifications = new ArrayList<>();
 
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean enabled = true;
+
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Role role = Role.DEVELOPER;
