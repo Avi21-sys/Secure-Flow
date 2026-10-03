@@ -1,9 +1,6 @@
 package com.secureflow.secureflow_backend.user.service;
 
-import com.secureflow.secureflow_backend.user.dto.ChangeRoleRequest;
-import com.secureflow.secureflow_backend.user.dto.CreateUserRequest;
-import com.secureflow.secureflow_backend.user.dto.UpdateUserRequest;
-import com.secureflow.secureflow_backend.user.dto.UserResponse;
+import com.secureflow.secureflow_backend.user.dto.*;
 
 import java.util.List;
 
@@ -19,7 +16,9 @@ public interface UserService {
 
     UserResponse changeRole(Long id, ChangeRoleRequest request);
 
-    UserResponse changeStatus(Long id, boolean enabled);
+    UserResponse changeStatus(
+            Long id,
+            ChangeStatusRequest request
+    );
 
-    void deleteUser(Long id);
 }

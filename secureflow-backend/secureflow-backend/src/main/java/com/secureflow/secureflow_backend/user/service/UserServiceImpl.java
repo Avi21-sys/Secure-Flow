@@ -2,10 +2,7 @@ package com.secureflow.secureflow_backend.user.service;
 
 import com.secureflow.secureflow_backend.common.exception.DuplicateResourceException;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
-import com.secureflow.secureflow_backend.user.dto.ChangeRoleRequest;
-import com.secureflow.secureflow_backend.user.dto.CreateUserRequest;
-import com.secureflow.secureflow_backend.user.dto.UpdateUserRequest;
-import com.secureflow.secureflow_backend.user.dto.UserResponse;
+import com.secureflow.secureflow_backend.user.dto.*;
 import com.secureflow.secureflow_backend.user.entity.User;
 import com.secureflow.secureflow_backend.user.repository.UserRepository;
 
@@ -107,25 +104,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse changeStatus(
             Long id,
-            boolean enabled
+            ChangeStatusRequest request
     ) {
 
         User user = getUser(id);
 
-        user.setEnabled(enabled);
+        user.setEnabled(request.getEnabled());
 
         User updatedUser = userRepository.save(user);
 
         return mapToResponse(updatedUser);
     }
 
-    @Override
-    public void deleteUser(Long id) {
-
-        User user = getUser(id);
-
-        userRepository.delete(user);
-    }
 
     private User getUser(Long id) {
 

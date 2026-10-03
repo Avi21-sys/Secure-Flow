@@ -1,10 +1,7 @@
 package com.secureflow.secureflow_backend.user.controller;
 
 import com.secureflow.secureflow_backend.common.response.ApiResponse;
-import com.secureflow.secureflow_backend.user.dto.ChangeRoleRequest;
-import com.secureflow.secureflow_backend.user.dto.CreateUserRequest;
-import com.secureflow.secureflow_backend.user.dto.UpdateUserRequest;
-import com.secureflow.secureflow_backend.user.dto.UserResponse;
+import com.secureflow.secureflow_backend.user.dto.*;
 import com.secureflow.secureflow_backend.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -110,36 +107,24 @@ public class UserController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResponse<UserResponse>> changeStatus(
             @PathVariable Long id,
-            @RequestParam boolean enabled
+            @Valid @RequestBody ChangeStatusRequest request
     ) {
 
         UserResponse response =
-                userService.changeStatus(id, enabled);
+                userService.changeStatus(id, request);
+
+        String message = request.getEnabled()
+                ? "User activated successfully"
+                : "User deactivated successfully";
 
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
-                        enabled
-                                ? "User activated successfully"
-                                : "User deactivated successfully",
+                        message,
                         response
                 )
         );
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(
-            @PathVariable Long id
-    ) {
 
-        userService.deleteUser(id);
-
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "User deleted successfully",
-                        null
-                )
-        );
-    }
 }
