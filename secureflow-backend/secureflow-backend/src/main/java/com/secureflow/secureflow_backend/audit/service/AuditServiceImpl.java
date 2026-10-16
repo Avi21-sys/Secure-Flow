@@ -5,12 +5,20 @@ import com.secureflow.secureflow_backend.audit.dto.CreateAuditRequest;
 import com.secureflow.secureflow_backend.audit.entity.AuditAction;
 import com.secureflow.secureflow_backend.audit.entity.AuditLog;
 import com.secureflow.secureflow_backend.audit.repository.AuditRepository;
+import com.secureflow.secureflow_backend.audit.specification.AuditSpecification;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.user.entity.User;
 import com.secureflow.secureflow_backend.user.repository.UserRepository;
+import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,6 +55,69 @@ public class AuditServiceImpl implements AuditService{
         return auditRepository.findAll().stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PagedResponse<AuditResponse> getAuditLogs(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir,
+            AuditAction action,
+            String entityName,
+            Long userId,
+            LocalDateTime startDate,
+            LocalDateTime endDate
+    ) {
+        if (startDate != null && endDate != null
+                && startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException(
+                    "startDate must not be after endDate"
+            );
+        }
+
+        int safePage = Math.max(page, 0);
+        int safeSize = size < 1 ? 10 : Math.min(size, 100);
+
+        String safeSortBy = validateAuditSortField(sortBy);
+
+        Sort.Direction direction =
+                "desc".equalsIgnoreCase(sortDir)
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(
+                safePage,
+                safeSize,
+                Sort.by(direction, safeSortBy)
+        );
+
+        var specification = AuditSpecification.filter(
+                action,
+                entityName,
+                userId,
+                startDate,
+                endDate
+        );
+
+        Page<AuditLog> auditPage =
+                auditRepository.findAll(specification, pageable);
+
+        List<AuditResponse> content = auditPage.getContent()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+
+        return PagedResponse.<AuditResponse>builder()
+                .content(content)
+                .page(auditPage.getNumber())
+                .size(auditPage.getSize())
+                .totalElements(auditPage.getTotalElements())
+                .totalPages(auditPage.getTotalPages())
+                .first(auditPage.isFirst())
+                .last(auditPage.isLast())
+                .build();
     }
 
     @Override
@@ -96,6 +167,22 @@ public class AuditServiceImpl implements AuditService{
 
         createAudit(request);
 
+    }
+
+    private String validateAuditSortField(String sortBy) {
+        List<String> allowedFields = List.of(
+                "id",
+                "action",
+                "entityName",
+                "entityId",
+                "createdAt"
+        );
+
+        if (sortBy == null || !allowedFields.contains(sortBy)) {
+            return "createdAt";
+        }
+
+        return sortBy;
     }
 
     private AuditResponse mapToResponse(AuditLog audit){

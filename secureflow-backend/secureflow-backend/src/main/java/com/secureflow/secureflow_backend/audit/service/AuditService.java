@@ -3,7 +3,9 @@ package com.secureflow.secureflow_backend.audit.service;
 import com.secureflow.secureflow_backend.audit.dto.AuditResponse;
 import com.secureflow.secureflow_backend.audit.dto.CreateAuditRequest;
 import com.secureflow.secureflow_backend.audit.entity.AuditAction;
+import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AuditService {
@@ -22,5 +24,17 @@ public interface AuditService {
             String entityName,
             Long entityId,
             String description
+    );
+
+    PagedResponse<AuditResponse> getAuditLogs(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir,
+            AuditAction action,
+            String entityName,
+            Long userId,
+            LocalDateTime startDate,
+            LocalDateTime endDate
     );
 }

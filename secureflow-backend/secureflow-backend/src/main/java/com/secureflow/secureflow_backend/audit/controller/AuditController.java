@@ -2,15 +2,19 @@ package com.secureflow.secureflow_backend.audit.controller;
 
 import com.secureflow.secureflow_backend.audit.dto.AuditResponse;
 import com.secureflow.secureflow_backend.audit.dto.CreateAuditRequest;
+import com.secureflow.secureflow_backend.audit.entity.AuditAction;
 import com.secureflow.secureflow_backend.audit.service.AuditService;
 import com.secureflow.secureflow_backend.common.response.ApiResponse;
+import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -67,6 +71,46 @@ public class AuditController {
                         .build()
         );
 
+    }
+
+
+    @GetMapping("/page")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST','MANAGER')")
+    public ResponseEntity<ApiResponse<PagedResponse<AuditResponse>>> getAuditLogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(required = false) AuditAction action,
+            @RequestParam(required = false) String entityName,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime startDate,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime endDate
+    ) {
+        PagedResponse<AuditResponse> response =
+                auditService.getAuditLogs(
+                        page,
+                        size,
+                        sortBy,
+                        sortDir,
+                        action,
+                        entityName,
+                        userId,
+                        startDate,
+                        endDate
+                );
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Audit logs retrieved successfully",
+                        response
+                )
+        );
     }
 
 
