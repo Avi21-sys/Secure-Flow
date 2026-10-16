@@ -3,6 +3,9 @@ package com.secureflow.secureflow_backend.incident.service;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
 import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
+import com.secureflow.secureflow_backend.incident.entity.IncidentSeverity;
+import com.secureflow.secureflow_backend.incident.entity.IncidentStatus;
+import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
 
 import java.util.List;
 
@@ -21,5 +24,16 @@ public interface IncidentService {
     IncidentResponse updateIncident(
             Long id,
             UpdateIncidentRequest request
+    );
+
+    PagedResponse<IncidentResponse> getIncidents(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir,
+            IncidentStatus status,
+            IncidentSeverity severity,
+            Long vulnerabilityId,
+            Long assignedToId
     );
 }

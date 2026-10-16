@@ -4,7 +4,10 @@ import com.secureflow.secureflow_backend.common.response.ApiResponse;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
 import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
+import com.secureflow.secureflow_backend.incident.entity.IncidentSeverity;
+import com.secureflow.secureflow_backend.incident.entity.IncidentStatus;
 import com.secureflow.secureflow_backend.incident.service.IncidentService;
+import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,6 +62,38 @@ public class IncidentController {
 
     }
 
+
+    @GetMapping("/page")
+    public ResponseEntity<ApiResponse<PagedResponse<IncidentResponse>>> getIncidents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(required = false) IncidentStatus status,
+            @RequestParam(required = false) IncidentSeverity severity,
+            @RequestParam(required = false) Long vulnerabilityId,
+            @RequestParam(required = false) Long assignedToId
+    ) {
+        PagedResponse<IncidentResponse> response =
+                incidentService.getIncidents(
+                        page,
+                        size,
+                        sortBy,
+                        sortDir,
+                        status,
+                        severity,
+                        vulnerabilityId,
+                        assignedToId
+                );
+
+        return ResponseEntity.ok(
+                new ApiResponse<>(
+                        true,
+                        "Incidents retrieved successfully",
+                        response
+                )
+        );
+    }
 
 
     // Get Incident By ID

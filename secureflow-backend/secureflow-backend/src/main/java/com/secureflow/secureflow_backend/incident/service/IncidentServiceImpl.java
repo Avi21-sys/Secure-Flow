@@ -8,14 +8,22 @@ import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
 import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.entity.Incident;
+import com.secureflow.secureflow_backend.incident.entity.IncidentSeverity;
 import com.secureflow.secureflow_backend.incident.entity.IncidentStatus;
 import com.secureflow.secureflow_backend.incident.repository.IncidentRepository;
+import com.secureflow.secureflow_backend.incident.specification.IncidentSpecification;
 import com.secureflow.secureflow_backend.user.entity.User;
 import com.secureflow.secureflow_backend.user.repository.UserRepository;
+import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
 import com.secureflow.secureflow_backend.vulnerability.entity.Vulnerability;
 import com.secureflow.secureflow_backend.vulnerability.repository.VulnerabilityRespository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -139,6 +147,60 @@ public class IncidentServiceImpl implements IncidentService {
 
         return mapToResponse(incident);
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PagedResponse<IncidentResponse> getIncidents(
+            int page,
+            int size,
+            String sortBy,
+            String sortDir,
+            IncidentStatus status,
+            IncidentSeverity severity,
+            Long vulnerabilityId,
+            Long assignedToId
+    ) {
+        int safePage = Math.max(page, 0);
+        int safeSize = size < 1 ? 10 : Math.min(size, 100);
+
+        String safeSortBy = validateIncidentSortField(sortBy);
+
+        Sort.Direction direction =
+                "desc".equalsIgnoreCase(sortDir)
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(
+                safePage,
+                safeSize,
+                Sort.by(direction, safeSortBy)
+        );
+
+        var specification = IncidentSpecification.filter(
+                status,
+                severity,
+                vulnerabilityId,
+                assignedToId
+        );
+
+        Page<Incident> incidentPage =
+                incidentRepository.findAll(specification, pageable);
+
+        List<IncidentResponse> content = incidentPage.getContent()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+
+        return PagedResponse.<IncidentResponse>builder()
+                .content(content)
+                .page(incidentPage.getNumber())
+                .size(incidentPage.getSize())
+                .totalElements(incidentPage.getTotalElements())
+                .totalPages(incidentPage.getTotalPages())
+                .first(incidentPage.isFirst())
+                .last(incidentPage.isLast())
+                .build();
     }
 
 
@@ -266,6 +328,23 @@ public class IncidentServiceImpl implements IncidentService {
         );
 
         return mapToResponse(updated);
+    }
+
+    private String validateIncidentSortField(String sortBy) {
+        List<String> allowedFields = List.of(
+                "id",
+                "title",
+                "severity",
+                "status",
+                "createdAt",
+                "resolvedAt"
+        );
+
+        if (sortBy == null || !allowedFields.contains(sortBy)) {
+            return "createdAt";
+        }
+
+        return sortBy;
     }
 
     private IncidentResponse mapToResponse(
