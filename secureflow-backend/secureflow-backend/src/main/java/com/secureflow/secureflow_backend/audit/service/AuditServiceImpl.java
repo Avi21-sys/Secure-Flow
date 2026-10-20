@@ -6,10 +6,12 @@ import com.secureflow.secureflow_backend.audit.entity.AuditAction;
 import com.secureflow.secureflow_backend.audit.entity.AuditLog;
 import com.secureflow.secureflow_backend.audit.repository.AuditRepository;
 import com.secureflow.secureflow_backend.audit.specification.AuditSpecification;
+import com.secureflow.secureflow_backend.common.exception.InvalidRequestException;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
+import com.secureflow.secureflow_backend.common.util.PaginationUtils;
 import com.secureflow.secureflow_backend.user.entity.User;
 import com.secureflow.secureflow_backend.user.repository.UserRepository;
-import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
+import com.secureflow.secureflow_backend.common.dto.PagedResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -72,25 +74,27 @@ public class AuditServiceImpl implements AuditService{
     ) {
         if (startDate != null && endDate != null
                 && startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException(
+            throw new InvalidRequestException(
                     "startDate must not be after endDate"
             );
         }
 
-        int safePage = Math.max(page, 0);
-        int safeSize = size < 1 ? 10 : Math.min(size, 100);
+        int validPage = PaginationUtils.validatePage(page);
+        int validSize = PaginationUtils.validateSize(size);
 
-        String safeSortBy = validateAuditSortField(sortBy);
+        String validSortBy = PaginationUtils.validateSortField(
+                sortBy,
+                getAllowedSortFields(),
+                "createdAt"
+        );
 
         Sort.Direction direction =
-                "desc".equalsIgnoreCase(sortDir)
-                        ? Sort.Direction.DESC
-                        : Sort.Direction.ASC;
+                PaginationUtils.validateSortDirection(sortDir);
 
         Pageable pageable = PageRequest.of(
-                safePage,
-                safeSize,
-                Sort.by(direction, safeSortBy)
+                validPage,
+                validSize,
+                Sort.by(direction, validSortBy)
         );
 
         var specification = AuditSpecification.filter(
@@ -183,6 +187,16 @@ public class AuditServiceImpl implements AuditService{
         }
 
         return sortBy;
+    }
+
+    private List<String> getAllowedSortFields() {
+        return List.of(
+                "id",
+                "action",
+                "entityName",
+                "entityId",
+                "createdAt"
+        );
     }
 
     private AuditResponse mapToResponse(AuditLog audit){

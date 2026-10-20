@@ -5,7 +5,7 @@ import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
 import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.entity.IncidentSeverity;
 import com.secureflow.secureflow_backend.incident.entity.IncidentStatus;
-import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
+import com.secureflow.secureflow_backend.common.dto.PagedResponse;
 
 import java.util.List;
 

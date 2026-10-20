@@ -5,7 +5,7 @@ import com.secureflow.secureflow_backend.audit.dto.CreateAuditRequest;
 import com.secureflow.secureflow_backend.audit.entity.AuditAction;
 import com.secureflow.secureflow_backend.audit.service.AuditService;
 import com.secureflow.secureflow_backend.common.response.ApiResponse;
-import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
+import com.secureflow.secureflow_backend.common.dto.PagedResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

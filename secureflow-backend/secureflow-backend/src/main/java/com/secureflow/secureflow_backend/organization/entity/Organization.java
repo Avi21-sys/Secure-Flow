@@ -40,6 +40,7 @@ public class Organization {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
     private List<Project> projects = new ArrayList<>();
 
     private LocalDateTime createdAt;

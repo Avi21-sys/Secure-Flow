@@ -91,26 +91,29 @@ public class SecurityConfig {
                         )
 
                         //Incident APIs
+
+                        // Incident APIs
                         .requestMatchers(HttpMethod.POST,
-                                "/api/v1/incident/**")
+                                "/api/v1/incidents/**")
                         .hasAnyRole("ADMIN", "ANALYST")
 
                         .requestMatchers(HttpMethod.PUT,
-                                "/api/v1/incident/**")
+                                "/api/v1/incidents/**")
                         .hasAnyRole("ADMIN", "ANALYST")
 
                         .requestMatchers(HttpMethod.DELETE,
-                                "/api/v1/incident/**")
+                                "/api/v1/incidents/**")
                         .hasRole("ADMIN")
 
                         .requestMatchers(HttpMethod.GET,
-                                "/api/v1/incident/**")
+                                "/api/v1/incidents/**")
                         .hasAnyRole(
                                 "ADMIN",
                                 "ANALYST",
                                 "DEVELOPER",
                                 "MANAGER"
                         )
+
 
                         .requestMatchers("/api/v1/dashboard/**")
                         .hasAnyRole("ADMIN","ANALYST","MANAGER")

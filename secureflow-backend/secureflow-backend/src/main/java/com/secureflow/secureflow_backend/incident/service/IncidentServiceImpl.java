@@ -4,6 +4,7 @@ import com.secureflow.secureflow_backend.audit.entity.AuditAction;
 import com.secureflow.secureflow_backend.audit.service.AuditService;
 import com.secureflow.secureflow_backend.common.exception.ResourceNotFoundException;
 import com.secureflow.secureflow_backend.common.security.SecurityUtils;
+import com.secureflow.secureflow_backend.common.util.PaginationUtils;
 import com.secureflow.secureflow_backend.incident.dto.CreateIncidentRequest;
 import com.secureflow.secureflow_backend.incident.dto.IncidentResponse;
 import com.secureflow.secureflow_backend.incident.dto.UpdateIncidentRequest;
@@ -14,7 +15,7 @@ import com.secureflow.secureflow_backend.incident.repository.IncidentRepository;
 import com.secureflow.secureflow_backend.incident.specification.IncidentSpecification;
 import com.secureflow.secureflow_backend.user.entity.User;
 import com.secureflow.secureflow_backend.user.repository.UserRepository;
-import com.secureflow.secureflow_backend.vulnerability.dto.PagedResponse;
+import com.secureflow.secureflow_backend.common.dto.PagedResponse;
 import com.secureflow.secureflow_backend.vulnerability.entity.Vulnerability;
 import com.secureflow.secureflow_backend.vulnerability.repository.VulnerabilityRespository;
 import lombok.RequiredArgsConstructor;
@@ -161,20 +162,22 @@ public class IncidentServiceImpl implements IncidentService {
             Long vulnerabilityId,
             Long assignedToId
     ) {
-        int safePage = Math.max(page, 0);
-        int safeSize = size < 1 ? 10 : Math.min(size, 100);
+        int validPage = PaginationUtils.validatePage(page);
+        int validSize = PaginationUtils.validateSize(size);
 
-        String safeSortBy = validateIncidentSortField(sortBy);
+        String validSortBy = PaginationUtils.validateSortField(
+                sortBy,
+                getAllowedSortFields(),
+                "createdAt"
+        );
 
         Sort.Direction direction =
-                "desc".equalsIgnoreCase(sortDir)
-                        ? Sort.Direction.DESC
-                        : Sort.Direction.ASC;
+                PaginationUtils.validateSortDirection(sortDir);
 
         Pageable pageable = PageRequest.of(
-                safePage,
-                safeSize,
-                Sort.by(direction, safeSortBy)
+                validPage,
+                validSize,
+                Sort.by(direction, validSortBy)
         );
 
         var specification = IncidentSpecification.filter(
@@ -345,6 +348,17 @@ public class IncidentServiceImpl implements IncidentService {
         }
 
         return sortBy;
+    }
+
+    private List<String> getAllowedSortFields() {
+        return List.of(
+                "id",
+                "title",
+                "severity",
+                "status",
+                "createdAt",
+                "resolvedAt"
+        );
     }
 
     private IncidentResponse mapToResponse(

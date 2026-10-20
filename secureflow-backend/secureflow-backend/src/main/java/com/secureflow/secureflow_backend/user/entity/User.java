@@ -37,12 +37,14 @@ public class User {
             mappedBy = "user",
             cascade = CascadeType.ALL
     )
+    @Builder.Default
     private List<AuditLog> auditLogs = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL
     )
+    @Builder.Default
     private List<Notification> notifications = new ArrayList<>();
 
     @Builder.Default

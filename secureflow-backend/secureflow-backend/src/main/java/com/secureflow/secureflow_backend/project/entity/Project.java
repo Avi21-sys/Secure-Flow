@@ -43,6 +43,7 @@ public class Project {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
     private List<Vulnerability> vulnerabilities = new ArrayList<>();
 
     private LocalDateTime createdAt;
